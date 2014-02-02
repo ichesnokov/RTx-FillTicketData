@@ -1,0 +1,7 @@
+%my $key_field_id = $RT::AutofillCFSettings->{key_field_id};
+%if ($CustomField && $CustomField->Id == $key_field_id) {
+    <td class="entry"><button onclick="return false;">Get data</button></td>
+%}
+<%ARGS>
+$CustomField => undef
+</%ARGS>
