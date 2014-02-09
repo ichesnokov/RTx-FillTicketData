@@ -1,0 +1,12 @@
+<%perl>
+$m->out(
+    RT::Interface::Web::EncodeJSON(
+        { hello => 'world', empty => 1, %ARGS }
+    )
+);
+$m->abort;
+</%perl>
+<%init>
+use RT::Interface::Web;
+$r->content_type('application/json');
+</%init>
