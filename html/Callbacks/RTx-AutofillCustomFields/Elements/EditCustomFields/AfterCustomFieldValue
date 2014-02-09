@@ -1,7 +1,19 @@
-%my $key_field_id = $RT::AutofillCFSettings->{key_field_id};
-%if ($CustomField && $CustomField->Id == $key_field_id) {
-    <td class="entry"><button id='autofill_custom_fields'><% loc('Get data') %></button></td>
-%}
+<%init>
+use RTx::AutofillCustomFields;
+
+my $key_field_id = $RT::AutofillCFSettings->{key_field_id};
+my $config = RTx::AutofillCustomFields::config;
+if ($config
+    && $CustomField
+    && $CustomField->Id ~~ [ keys %{ $config->{key_fields} } ]
+) {
+    $m->out(
+        q{<td class="entry"><button id='autofill_custom_fields'>}
+        . loc('Get data')
+        . q{</button></td>}
+    );
+}
+</%init>
 <%ARGS>
 $CustomField => undef
 </%ARGS>
