@@ -12,9 +12,9 @@ use JSON;
 
 RT->AddJavaScript('RTx-AutofillCustomFields.js');
 
-our $old_md5_sum = ''; # avoid uninitialized warning
-our $config;
-our %dbh_for;
+my $old_md5_sum = ''; # avoid uninitialized warning
+my $config;
+my %dbh_for;
 
 sub config { return $config; }
 
