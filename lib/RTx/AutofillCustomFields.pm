@@ -20,21 +20,25 @@ sub config { return $config; }
 sub read_config {
     my $config_file = shift;
 
-    # Reading file
-    local $/;
-    open my $FH, '<', $config_file
-        or die "Could not open file $config_file: $!";
-    my $json_data = <$FH>;
-    close $FH;
-
+    my $json_data = read_file($config_file);
     my $md5_sum = md5_hex($json_data);
-    if ($old_md5_sum eq $md5_sum) {
+    if ($md5_sum eq $old_md5_sum) {
         $RT::Logger->warn("MD5 sum matches the old one ($md5_sum), leaving config alone");
         return $config;
     }
-    $RT::Logger->warn('New plugin configuration detected, re-reading config');
 
-    $config = JSON::from_json($json_data);
+    $RT::Logger->warn('New plugin configuration detected, re-reading config',
+        "old_sum: $old_md5_sum, new sum: $md5_sum");
+    $old_md5_sum = $md5_sum;
+    $config = from_json($json_data);
+}
+
+sub read_file {
+    my $filename = shift;
+    local $/;
+    open my $FH, '<', $filename
+        or die "Could not open file $filename: $!";
+    return <$FH>;
 }
 
 my %dbh_for;
