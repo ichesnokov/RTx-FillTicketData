@@ -12,9 +12,10 @@ use JSON;
 
 RT->AddJavaScript('RTx-AutofillCustomFields.js');
 
-my $old_md5_sum = ''; # avoid uninitialized warning
+our $old_md5_sum = ''; # avoid uninitialized warning
+our $config;
+our %dbh_for;
 
-my $config;
 sub config { return $config; }
 
 sub read_config {
@@ -40,8 +41,6 @@ sub read_file {
         or die "Could not open file $filename: $!";
     return <$FH>;
 }
-
-my %dbh_for;
 
 # Re-initialize database connections
 sub init_connections {
