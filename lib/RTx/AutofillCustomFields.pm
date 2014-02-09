@@ -1,5 +1,6 @@
 use strict;
 use warnings;
+use feature qw(switch);
 
 package RTx::AutofillCustomFields;
 
@@ -49,17 +50,20 @@ sub init_connections {
 sub _connect_db {
     my $db_config = shift;
 
-    my $db_type = lc $db_config->{type};
-    my $dsn = "dbi:$db_type:$db_config->{database}";
+    my $dsn = "dbi:$db_config->{type}:$db_config->{database}";
     for my $field (qw(host port)) {
         $dsn .= ";$field=$db_config->{$field}" if $db_config->{$field};
     }
 
-    my %more_attrs =
-        $db_type eq 'mysql' ? ( mysql_enable_utf8 => 1 )
-      : $db_type eq 'pg'    ? ( pg_enable_utf8    => 1 )
-      :                       ();
-
+    my %more_attrs;
+    given ($db_config->{type}) {
+        when ('mysql') {
+            %more_attrs = ( mysql_enable_utf8 => 1 );
+        }
+        when ('Pg') {
+            %more_attrs = ( pg_enable_utf8 => 1 );
+        }
+    }
     my $dbh = DBI->connect(
         $dsn,
         $db_config->{user},
