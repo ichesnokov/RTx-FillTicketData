@@ -26,10 +26,10 @@ sub read_config {
 
     my $md5_sum = md5_hex($json_data);
     if ($old_md5_sum eq $md5_sum) {
-        RT->Logger->debug("md5 sum matches the old one ($md5_sum), not re-reading config");
+        $RT::Logger->warn("MD5 sum matches the old one ($md5_sum), leaving config alone");
         return $config;
     }
-    RT->Logger->debug("new plugin configuration detected");
+    $RT::Logger->warn('New plugin configuration detected, re-reading config');
 
     $config = JSON::from_json($json_data);
 }
