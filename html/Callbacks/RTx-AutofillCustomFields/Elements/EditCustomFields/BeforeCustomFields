@@ -1,0 +1,12 @@
+config file is: <% $config_file %>
+<%init>
+# Read the config file
+use RTx::AutofillCustomFields;
+my $config_file = $RT::AutofillCustomFieldsSettingsFile;
+if (!-f $config_file) {
+    $m->out("No config file: $config_file");
+    return;
+}
+RTx::AutofillCustomFields::read_config($config_file);
+RTx::AutofillCustomFields::init_connections();
+</%init>
