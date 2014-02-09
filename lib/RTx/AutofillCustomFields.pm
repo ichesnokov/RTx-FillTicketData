@@ -76,7 +76,7 @@ sub _connect_db {
             %more_attrs
         },
     );
-    $dbh->do('SET NAMES utf8');
+    $dbh->do('SET NAMES utf8') if $db_config->{type} ne 'SQLite';
     return $dbh;
 }
 
