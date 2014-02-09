@@ -68,7 +68,7 @@ sub _connect_db {
     }
     my $dbh = DBI->connect(
         $dsn,
-        $db_config->{user},
+        $db_config->{username},
         $db_config->{password},
         {
             RaiseError => 1,
