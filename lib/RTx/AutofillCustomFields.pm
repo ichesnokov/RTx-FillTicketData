@@ -15,6 +15,8 @@ RT->AddJavaScript('RTx-AutofillCustomFields.js');
 my $old_md5_sum = ''; # avoid uninitialized warning
 
 my $config;
+sub config { return $config; }
+
 sub read_config {
     my $config_file = shift;
 
