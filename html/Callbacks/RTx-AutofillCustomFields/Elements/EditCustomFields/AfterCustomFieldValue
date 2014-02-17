@@ -4,7 +4,7 @@ my $config = RTx::AutofillCustomFields::config();
 if (    $config
      && $CustomField
      && $config->{key_fields}->{ $CustomField->Id } ) {
-    $m->out(   q{<td class="entry"><button id='autofill_custom_fields'>}
+    $m->out(   q{<td class="entry"><button class='autofill_custom_fields'>}
              . loc('Get data')
              . q{</button></td>} );
 }
