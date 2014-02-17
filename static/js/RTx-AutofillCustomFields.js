@@ -1,24 +1,56 @@
 jQuery(function($) {
-    var update_field_value = function(field, key_field_value) {
-        var ids = $(field).attr('class').match(/(\d+)/);
-        var field_id = ids[0];
-        if (field_id) {
-            //jQuery.ajax('/Elements/AutoFillCustomFields', {
-            //    data: { field_id: field_id, key_field_value: key_field_value },
-            //    dataType: 'json',
-            //    success: function(data) {
-            //        $(field).val(data.value);
-            //    },
-            //});
-            $(field).val('id=' + field_id);
+
+    function jq(myid) {
+        return "#" + myid.replace( /(:|\.|\[|\])/g, "\\$1" );
+    }
+
+    var fill_value = function(key, val) {
+
+        // Search subject by name
+        if (key == 'Subject') {
+            $("input[name='Subject']").each(function() {
+                $(this).val(val);
+            });
+            return;
         }
-    };
-    var autofill_custom_fields = function() {
-        var custom_fields = jQuery("[class*=CF-]").each(function(){
-            update_field_value(this, key_field_value);
+
+        // Ticket body is a CKEditor instance
+        if (key == 'Body') {
+            CKEDITOR.instances.Content.setData(val);
+            return;
+        }
+
+        // Search other elements (custom fields) by id
+        var element = $(jq(key));
+        if (element) {
+            $(element).val(val);
+        } else {
+            alert("No element with id: " + key);
+        }
+    }
+
+    var update_fields = function(cf_data) {
+        $.ajax({
+            url: '/GetCFData',
+            data: cf_data,
+            dataType: 'json',
+            success: function(data) {
+                $.each(data, fill_value);
+            },
+            error: function(jqXHR, textStatus) {
+                alert('Error: ' + textStatus);
+            },
         });
     };
-    jQuery('#autofill_custom_fields').click(function(ev){
+
+    var autofill_custom_fields = function() {
+        var cf_data = {};
+        jQuery("[class*=CF-]").each(function(){
+            cf_data[$(this).attr('id')] = $(this).val();
+        });
+        update_fields(cf_data);
+    };
+    jQuery('.autofill_custom_fields').click(function(ev){
         ev.preventDefault();
         autofill_custom_fields();
     });
