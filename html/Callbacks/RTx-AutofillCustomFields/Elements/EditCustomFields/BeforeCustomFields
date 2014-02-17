@@ -1,4 +1,3 @@
-config file is: <% $config_file %>
 <%init>
 # Read the config file
 use RTx::AutofillCustomFields;
