@@ -175,14 +175,33 @@ sub get_data {
 sub _get_command_result {
     my ($source, $id, $value) = @_;
 
-    return "command: $source->{command}";
+    #return "command: $source->{command}";
+
+    my $readable_id = $config->{key_fields}->{$id};
+    my $command = $source->{command};
+
+    $command =~ s/$readable_id/$value/g;
+
+    # NOTE: this is extremely unsafe
+    return `$command`;
 }
 
 sub _get_db_result {
     my ($source, $id, $value) = @_;
 
+    my $readable_id = $config->{key_fields}->{$id};
     my $sql = $source->{sql};
-    return "sql: $sql";
+    #return "sql: $sql";
+
+    # If SQL doesn't contain that ID, skip it
+    return if $sql !~ /$readable_id/;
+
+    my $dbh = $dbh_for{ $source->{database} };
+    my $quoted_value = $dbh->quote($value);
+    $sql =~ s/$readable_id/$quoted_value/g;
+
+    my @columns = $dbh->selectrow_array($sql);
+    return join ', ', @columns;
 }
 
 sub _get_field_id {
