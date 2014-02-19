@@ -109,7 +109,10 @@ sub get_data {
     my %arg = @_;
 
     # Last try to read a config if we haven't already
-    read_config() if !$config;
+    if (!$config) {
+        read_config();
+        init_connections();
+    }
 
     # Detect whether we have key fields in the input
     my %field_for_id = map { /(\d+)/, $_ } keys %arg;
