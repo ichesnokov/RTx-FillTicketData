@@ -115,7 +115,21 @@ sub get_data {
     }
 
     # Detect whether we have key fields in the input
-    my %field_for_id = map { /(\d+)/, $_ } keys %$arg;
+    my %field_id_for;
+    my %key_field;
+    while (my ($key, $value) = each %$arg) {
+        $field_id_for{$key} = _get_field_id($key);
+
+        if ($value ne '__exists__') {
+            $key_field{ $field_id_for{$key} } = $value;
+        }
+    }
+    my %html_id_for = reverse %field_id_for;
+
+    if (!%key_field) {
+        warn 'no key field';
+        return { error => 'No key field' };
+    }
 
     # Contents of appropriate fields
     my %content_of;
@@ -123,7 +137,7 @@ sub get_data {
     for my $field_id (
         grep {
             $_ ne '_comment'     # Filter out comments
-            && $field_for_id{$_} # Filter out fields not on page
+            && $html_id_for{$_} # Filter out fields not on page
         } keys %{ $config->{field_sources} }
     ) {
         my @sources = @{ $config->{field_sources}->{$field_id} };
@@ -131,37 +145,48 @@ sub get_data {
 
             # Detect type of source - command or database
             if ($source->{command}) {
-                if (my $result = _get_command_result($source, $arg)) {
+                if (my $result = _get_command_result($source, %key_field)) {
                     $content_of{$field_id} .= $result;
                 }
             } elsif ($source->{database}) {
-                if (my $result = _get_db_result($source, $arg)) {
+                if (my $result = _get_db_result($source, %key_field)) {
                     $content_of{$field_id} .= $result;
                 }
             } else {
-                $content_of{$field_id} = 'Error: wrong source configuration';
+                $content_of{$field_id}
+                    = "Wrong source configuration for field $field_id";
             }
         }
     }
 
     #warn 'content_of: ' . Dumper(\%content_of);
 
-    my %result = map { $field_for_id{$_} => $content_of{$_} } keys %content_of;
+    my %result = map { $html_id_for{$_} => $content_of{$_} } keys %content_of;
 
     #warn 'result: ' . Dumper(\%result);
     return \%result;
 }
 
 sub _get_command_result {
-    my ($source, $arg) = @_;
+    my ($source, $id, $value) = @_;
+
     return "command: $source->{command}";
 }
 
 sub _get_db_result {
-    my ($source, $arg) = @_;
+    my ($source, $id, $value) = @_;
 
     my $sql = $source->{sql};
     return "sql: $sql";
+}
+
+sub _get_field_id {
+    my $html_id = shift;
+
+    if ($html_id =~ /(\d+)/) {
+        return $1;
+    }
+    die "Field html id ($html_id) contains no digits";
 }
 
 1;
