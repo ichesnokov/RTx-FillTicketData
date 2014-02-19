@@ -1,15 +1,8 @@
 <%perl>
-my %args = %ARGS;
-for (values %args) {
-    $_ = "got: $_";
-}
 $m->out(
-    RT::Interface::Web::EncodeJSON({
-        Subject => 'Hello, world!',
-        Body    => 'Bye-bye!',
-        hello   => 'world',
-        %args
-    })
+    RT::Interface::Web::EncodeJSON(
+        RTx::FillTicketData::get_data(%ARGS)
+    )
 );
 $m->abort;
 </%perl>
