@@ -94,19 +94,19 @@ sub _connect_db {
 
 Returns data from configured sources
 
-    In: %arg hash in the form
+    In: \%arg hash in the form
     (
         Object-RT::Ticket--CustomField-1-Values => $value1,
         Object-RT::Ticket--CustomField-3-Values => $value3,
         ...
     )
-    Out: %content_of - hash of values from the configured sources for the same
+    Out: \%content_of - hash of values from the configured sources for the same
         fields as
 
 =cut
 
 sub get_data {
-    my %arg = @_;
+    my $arg = shift;
 
     # Last try to read a config if we haven't already
     if (!$config) {
@@ -115,7 +115,7 @@ sub get_data {
     }
 
     # Detect whether we have key fields in the input
-    my %field_for_id = map { /(\d+)/, $_ } keys %arg;
+    my %field_for_id = map { /(\d+)/, $_ } keys %$arg;
 
     # Contents of appropriate fields
     my %content_of;
@@ -131,11 +131,11 @@ sub get_data {
 
             # Detect type of source - command or database
             if ($source->{command}) {
-                if (my $result = _get_command_result($source, \%arg)) {
+                if (my $result = _get_command_result($source, $arg)) {
                     $content_of{$field_id} .= $result;
                 }
             } elsif ($source->{database}) {
-                if (my $result = _get_db_result($source, \%arg)) {
+                if (my $result = _get_db_result($source, $arg)) {
                     $content_of{$field_id} .= $result;
                 }
             } else {
@@ -153,13 +153,15 @@ sub get_data {
 }
 
 sub _get_command_result {
-    my $source = shift;
+    my ($source, $arg) = @_;
     return "command: $source->{command}";
 }
 
 sub _get_db_result {
-    my $source = shift;
-    return "database: $source->{sql}";
+    my ($source, $arg) = @_;
+
+    my $sql = $source->{sql};
+    return "sql: $sql";
 }
 
 1;

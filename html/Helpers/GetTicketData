@@ -1,7 +1,7 @@
 <%perl>
 $m->out(
     RT::Interface::Web::EncodeJSON(
-        RTx::FillTicketData::get_data(%ARGS)
+        RTx::FillTicketData::get_data(\%ARGS)
     )
 );
 $m->abort;
