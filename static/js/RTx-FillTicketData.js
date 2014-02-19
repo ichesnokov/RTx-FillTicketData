@@ -46,9 +46,18 @@ jQuery(function($) {
     $('.autofill_custom_fields').click(function(ev){
         ev.preventDefault();
 
-        var key_field = $(this).parent().prev().children().first().next();
         var cf_data = {};
+
+        // Pass custom fields that are currently on page
+        $("[class*=CF-]").each(function(){
+            // magic value indicating that the field exists on page
+            cf_data[$(this).attr('id')] = '__exists__';
+        });
+
+        // Store key field value
+        var key_field = $(this).parent().prev().children().first().next();
         cf_data[ $(key_field).attr('id') ] = $(key_field).val();
+
         update_fields(cf_data);
     });
 });
