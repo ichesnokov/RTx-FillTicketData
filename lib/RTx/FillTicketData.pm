@@ -18,8 +18,12 @@ my %dbh_for;
 
 sub config { return $config; }
 
+sub find_config_file {
+    RT->Config->Get('FillTicketDataSettingsFile');
+}
+
 sub read_config {
-    my $config_file = shift;
+    my $config_file = shift || find_config_file();
 
     my $json_data = read_file($config_file);
     my $md5_sum = md5_hex($json_data);

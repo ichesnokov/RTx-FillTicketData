@@ -1,7 +1,6 @@
 <%init>
 # Read the config file
-use RTx::FillTicketData;
-my $config_file = $RT::FillTicketDataSettingsFile;
+my $config_file = RTx::FillTicketData::find_config_file();
 if (!-f $config_file) {
     $m->out("No config file: $config_file");
     return;
@@ -9,3 +8,6 @@ if (!-f $config_file) {
 RTx::FillTicketData::read_config($config_file);
 RTx::FillTicketData::init_connections();
 </%init>
+<%once>
+use RTx::FillTicketData;
+</%once>
