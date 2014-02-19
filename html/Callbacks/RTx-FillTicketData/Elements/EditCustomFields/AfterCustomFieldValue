@@ -1,14 +1,13 @@
-<%init>
+%my $config = RTx::FillTicketData::config();
+%if ($CustomField && $config && $config->{key_fields}->{ $CustomField->Id } ) {
+<td class="entry">
+  <button class='autofill_custom_fields'><% loc('Get data') %></button>
+</td>
+%}
+
+<%once>
 use RTx::FillTicketData;
-my $config = RTx::FillTicketData::config();
-if (    $config
-     && $CustomField
-     && $config->{key_fields}->{ $CustomField->Id } ) {
-    $m->out(   q{<td class="entry"><button class='autofill_custom_fields'>}
-             . loc('Get data')
-             . q{</button></td>} );
-}
-</%init>
+</%once>
 <%ARGS>
 $CustomField => undef
 </%ARGS>
