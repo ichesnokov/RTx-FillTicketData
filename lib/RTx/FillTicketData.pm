@@ -119,6 +119,7 @@ sub get_data {
     # Detect whether we have key fields in the input
     my %field_id_for;
     my %key_field;
+
     while (my ($key, $value) = each %$arg) {
         $field_id_for{$key} = _get_field_id($key);
 
@@ -126,7 +127,9 @@ sub get_data {
             $key_field{ $field_id_for{$key} } = $value;
         }
     }
-    my %html_id_for = reverse %field_id_for;
+
+    # Append Subject and Body
+    my %html_id_for = reverse %field_id_for, qw(Body Body Subject Subject);
 
     if (!%key_field) {
         warn 'no key field';
@@ -138,7 +141,7 @@ sub get_data {
 
     for my $field_id (
         grep {
-            $_ ne '_comment'     # Filter out comments
+            $_ ne '_comment'    # Filter out comments
             && $html_id_for{$_} # Filter out fields not on page
         } keys %{ $config->{field_sources} }
     ) {
