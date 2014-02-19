@@ -1,8 +1,15 @@
 <%perl>
+my %args = %ARGS;
+for (values %args) {
+    $_ = "got: $_";
+}
 $m->out(
-    RT::Interface::Web::EncodeJSON(
-        { hello => 'world', empty => 1, %ARGS }
-    )
+    RT::Interface::Web::EncodeJSON({
+        Subject => 'Hello, world!',
+        Body    => 'Bye-bye!',
+        hello   => 'world',
+        %args
+    })
 );
 $m->abort;
 </%perl>
