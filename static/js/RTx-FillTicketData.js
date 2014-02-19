@@ -43,15 +43,12 @@ jQuery(function($) {
         });
     };
 
-    var autofill_custom_fields = function() {
-        var cf_data = {};
-        jQuery("[class*=CF-]").each(function(){
-            cf_data[$(this).attr('id')] = $(this).val();
-        });
-        update_fields(cf_data);
-    };
-    jQuery('.autofill_custom_fields').click(function(ev){
+    $('.autofill_custom_fields').click(function(ev){
         ev.preventDefault();
-        autofill_custom_fields();
+
+        var key_field = $(this).parent().prev().children().first().next();
+        var cf_data = {};
+        cf_data[ $(key_field).attr('id') ] = $(key_field).val();
+        update_fields(cf_data);
     });
 });
