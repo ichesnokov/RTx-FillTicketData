@@ -10,6 +10,9 @@ use DBI;
 use Digest::MD5 qw(md5_hex);
 use JSON;
 
+#use Data::Dumper;
+#local $Data::Dumper::Sortkeys = 1;
+
 RT->AddJavaScript('RTx-FillTicketData.js');
 
 my $old_md5_sum = ''; # avoid uninitialized warning
@@ -85,6 +88,75 @@ sub _connect_db {
     );
     $dbh->do('SET NAMES utf8') if $db_config->{type} ne 'SQLite';
     return $dbh;
+}
+
+=head3 get_data
+
+Returns data from configured sources
+
+    In: %arg hash in the form
+    (
+        Object-RT::Ticket--CustomField-1-Values => $value1,
+        Object-RT::Ticket--CustomField-3-Values => $value3,
+        ...
+    )
+    Out: %content_of - hash of values from the configured sources for the same
+        fields as
+
+=cut
+
+sub get_data {
+    my %arg = @_;
+
+    # Last try to read a config if we haven't already
+    read_config() if !$config;
+
+    # Detect whether we have key fields in the input
+    my %field_for_id = map { /(\d+)/, $_ } keys %arg;
+
+    # Contents of appropriate fields
+    my %content_of;
+
+    for my $field_id (
+        grep {
+            $_ ne '_comment'     # Filter out comments
+            && $field_for_id{$_} # Filter out fields not on page
+        } keys %{ $config->{field_sources} }
+    ) {
+        my @sources = @{ $config->{field_sources}->{$field_id} };
+        for my $source (@sources) {
+
+            # Detect type of source - command or database
+            if ($source->{command}) {
+                if (my $result = _get_command_result($source, \%arg)) {
+                    $content_of{$field_id} .= $result;
+                }
+            } elsif ($source->{database}) {
+                if (my $result = _get_db_result($source, \%arg)) {
+                    $content_of{$field_id} .= $result;
+                }
+            } else {
+                $content_of{$field_id} = 'Error: wrong source configuration';
+            }
+        }
+    }
+
+    #warn 'content_of: ' . Dumper(\%content_of);
+
+    my %result = map { $field_for_id{$_} => $content_of{$_} } keys %content_of;
+
+    #warn 'result: ' . Dumper(\%result);
+    return \%result;
+}
+
+sub _get_command_result {
+    my $source = shift;
+    return "command: $source->{command}";
+}
+
+sub _get_db_result {
+    my $source = shift;
+    return "database: $source->{sql}";
 }
 
 1;
