@@ -1,3 +1,3 @@
-Plugin('RTx::AutofillCustomFields');
-Set( $AutofillCustomFieldsSettingsFile =>
-     '/home/user/rt4/etc/autofill_cf_settings.json' );
+Plugin('RTx::FillTicketData');
+Set( $FillTicketDataSettingsFile =>
+     '/home/user/rt4/etc/fill_ticket_data_settings.json' );

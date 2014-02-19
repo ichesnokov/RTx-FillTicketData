@@ -1,6 +1,6 @@
 <%init>
-use RTx::AutofillCustomFields;
-my $config = RTx::AutofillCustomFields::config();
+use RTx::FillTicketData;
+my $config = RTx::FillTicketData::config();
 if (    $config
      && $CustomField
      && $config->{key_fields}->{ $CustomField->Id } ) {

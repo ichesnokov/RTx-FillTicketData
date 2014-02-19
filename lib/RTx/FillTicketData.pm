@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use feature qw(switch);
 
-package RTx::AutofillCustomFields;
+package RTx::FillTicketData;
 
 our $VERSION = '0.01';
 
@@ -10,7 +10,7 @@ use DBI;
 use Digest::MD5 qw(md5_hex);
 use JSON;
 
-RT->AddJavaScript('RTx-AutofillCustomFields.js');
+RT->AddJavaScript('RTx-FillTicketData.js');
 
 my $old_md5_sum = ''; # avoid uninitialized warning
 my $config;
