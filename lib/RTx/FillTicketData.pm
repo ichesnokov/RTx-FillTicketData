@@ -108,6 +108,8 @@ Returns data from configured sources
 sub get_data {
     my $arg = shift;
 
+    #warn 'arg: ' . Dumper($arg);
+
     # Last try to read a config if we haven't already
     if (!$config) {
         read_config();
