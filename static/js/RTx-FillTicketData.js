@@ -31,7 +31,7 @@ jQuery(function($) {
 
     var update_fields = function(cf_data) {
         $.ajax({
-            url: '/GetCFData',
+            url: '/Helpers/GetTicketData',
             data: cf_data,
             dataType: 'json',
             success: function(data) {
