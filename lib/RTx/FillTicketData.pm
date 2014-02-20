@@ -187,7 +187,10 @@ sub _get_command_result {
     $command =~ s/$readable_id/$value/g;
 
     # NOTE: this is extremely unsafe
-    return `$command`;
+    my $result = `$command`;
+
+    utf8::decode($result);
+    return $result;
 }
 
 sub _get_db_result {
