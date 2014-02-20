@@ -177,8 +177,12 @@ sub _get_command_result {
 
     #return "command: $source->{command}";
 
-    my $readable_id = $config->{key_fields}->{$id};
+    my $readable_id = $config->{key_fields}->{$id}
+        or return;
     my $command = $source->{command};
+
+    # If command doesn't contain such ID, skip it
+    return if $command !~ /$readable_id/;
 
     $command =~ s/$readable_id/$value/g;
 
@@ -189,11 +193,12 @@ sub _get_command_result {
 sub _get_db_result {
     my ($source, $id, $value) = @_;
 
-    my $readable_id = $config->{key_fields}->{$id};
+    my $readable_id = $config->{key_fields}->{$id}
+        or return;
     my $sql = $source->{sql};
     #return "sql: $sql";
 
-    # If SQL doesn't contain that ID, skip it
+    # If SQL doesn't contain such ID, skip it
     return if $sql !~ /$readable_id/;
 
     my $dbh = $dbh_for{ $source->{database} };
@@ -207,7 +212,8 @@ sub _get_db_result {
 sub _get_field_id {
     my $html_id = shift;
 
-    if ($html_id =~ /(\d+)/) {
+    if ($html_id =~ /CustomField-(\d+)/) {
+        #warn "html_id: $html_id, field_id: $1";
         return $1;
     }
     die "Field html id ($html_id) contains no digits";
