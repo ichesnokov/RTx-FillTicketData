@@ -1,7 +1,8 @@
+%use utf8;
 %my $config = RTx::FillTicketData::config();
 %if ($CustomField && $config && $config->{key_fields}->{ $CustomField->Id } ) {
 <td class="entry">
-  <button class='autofill_custom_fields'><% loc('Get data') %></button>
+  <button class='autofill_custom_fields'>Получить данные</button>
 </td>
 %}
 
