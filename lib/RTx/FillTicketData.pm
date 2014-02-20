@@ -1,6 +1,6 @@
+use v5.10;
 use strict;
 use warnings;
-use feature qw(switch);
 
 package RTx::FillTicketData;
 
@@ -8,7 +8,7 @@ our $VERSION = '0.01';
 
 use DBI;
 use Digest::MD5 qw(md5_hex);
-use JSON;
+use JSON qw(from_json);
 
 #use Data::Dumper;
 #local $Data::Dumper::Sortkeys = 1;
