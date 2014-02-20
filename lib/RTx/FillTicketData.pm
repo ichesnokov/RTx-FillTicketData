@@ -184,6 +184,10 @@ sub _get_command_result {
     # If command doesn't contain such ID, skip it
     return if $command !~ /$readable_id/;
 
+    # Strip all non-digits from id field's value
+    $value =~ s/\D+//g;
+    return if !$value;
+
     $command =~ s/$readable_id/$value/g;
 
     # NOTE: this is extremely unsafe
@@ -203,6 +207,11 @@ sub _get_db_result {
 
     # If SQL doesn't contain such ID, skip it
     return if $sql !~ /$readable_id/;
+
+    # Strip all non-digits from id field's value
+    $value =~ s/\D+//g;
+    return if !$value;
+
 
     my $dbh = $dbh_for{ $source->{database} };
     my $quoted_value = $dbh->quote($value);
