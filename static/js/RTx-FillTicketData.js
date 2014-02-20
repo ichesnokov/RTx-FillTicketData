@@ -16,7 +16,13 @@ jQuery(function($) {
 
         // Ticket body is a CKEditor instance
         if (key == 'Body') {
-            CKEDITOR.instances.Content.setData(val);
+            if (CKEDITOR.instances.Content) {
+                CKEDITOR.instances.Content.setData(val);
+            }
+            if (CKEDITOR.instances.UpdateContent) {
+                CKEDITOR.instances.UpdateContent.setData(val);
+            }
+
             return;
         }
 
