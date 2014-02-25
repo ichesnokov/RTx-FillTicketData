@@ -19,6 +19,18 @@ my $old_md5_sum = ''; # avoid uninitialized warning
 my $config;
 my %dbh_for;
 
+# Current user's signature. It is set before the messagebox is created by
+# appropriate callback.
+my $current_signature;
+
+# Accessor for the current signature
+sub current_signature {
+    if (@_) {
+        $current_signature = shift;
+    }
+    return $current_signature;
+}
+
 sub config { return $config; }
 
 sub find_config_file {
@@ -167,6 +179,10 @@ sub get_data {
     #warn 'content_of: ' . Dumper(\%content_of);
 
     my %result = map { $html_id_for{$_} => $content_of{$_} } keys %content_of;
+
+    if ($result{Body} && current_signature()) {
+        $result{Body} .= current_signature();
+    }
 
     #warn 'result: ' . Dumper(\%result);
     return \%result;

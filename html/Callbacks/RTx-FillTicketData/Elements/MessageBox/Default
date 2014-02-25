@@ -1,0 +1,6 @@
+<%perl>
+RTx::FillTicketData::current_signature($$SignatureRef);
+</%perl>
+<%args>
+$SignatureRef => \'';
+</%args>
