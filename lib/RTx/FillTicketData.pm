@@ -152,6 +152,7 @@ sub get_data {
             my $result =
                   $source->{command}  ? _get_command_result($source, %key_field)
                 : $source->{database} ? _get_db_result($source, %key_field)
+                : $source->{Text}     ? _get_text_result($source, %key_field)
                 : "Wrong source configuration for field $field_id";
             next if !$result;
 
@@ -217,6 +218,23 @@ sub _get_db_result {
 
     my @columns = $dbh->selectrow_array($sql);
     return join ', ', @columns;
+}
+
+sub _get_text_result {
+    my ($source, $id, $value) = @_;
+
+    # Get readable id from config (e.g. ACCOUNT_ID)
+    my $readable_id = $config->{key_fields}->{$id}
+        or return;
+
+    # Strip all non-digits from id field's value
+    $value =~ s/\D+//g;
+    return if !$value;
+
+    my $text = $source->{Text};
+    utf8::decode($text); # convert to characters
+    $text =~ s/$readable_id/$value/g;
+    return $text;
 }
 
 sub _get_field_id {
