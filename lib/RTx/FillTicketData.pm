@@ -174,19 +174,16 @@ sub get_data {
 sub _get_command_result {
     my ($source, $id, $value) = @_;
 
-    #return "command: $source->{command}";
-
     my $readable_id = $config->{key_fields}->{$id}
         or return;
-    my $command = $source->{command};
-
-    # If command doesn't contain such ID, skip it
-    return if $command !~ /$readable_id/;
-
     # Strip all non-digits from id field's value
     $value =~ s/\D+//g;
     return if !$value;
 
+    my $command = $source->{command};
+
+    # If command doesn't contain such ID, skip it
+    return if $command !~ /$readable_id/;
     $command =~ s/$readable_id/$value/g;
 
     # NOTE: this is extremely unsafe
@@ -199,20 +196,22 @@ sub _get_command_result {
 sub _get_db_result {
     my ($source, $id, $value) = @_;
 
+    # Get readable id from config (e.g. ACCOUNT_ID)
     my $readable_id = $config->{key_fields}->{$id}
         or return;
-    my $sql = $source->{sql};
-    #return "sql: $sql";
-
-    # If SQL doesn't contain such ID, skip it
-    return if $sql !~ /$readable_id/;
 
     # Strip all non-digits from id field's value
     $value =~ s/\D+//g;
     return if !$value;
 
+    my $sql = $source->{sql};
 
-    my $dbh = $dbh_for{ $source->{database} };
+    # If SQL doesn't contain such ID, skip it
+    return if $sql !~ /$readable_id/;
+
+    my $dbh = $dbh_for{ $source->{database} }
+        or return "No connection to database $source->{database}";
+
     my $quoted_value = $dbh->quote($value);
     $sql =~ s/$readable_id/$quoted_value/g;
 
