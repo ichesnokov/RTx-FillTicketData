@@ -155,6 +155,10 @@ sub get_data {
                 : "Wrong source configuration for field $field_id";
             next if !$result;
 
+            # Data from different sources are concatenated using newlines
+            if ($content_of{$field_id}) {
+                $content_of{$field_id} .= "<br/>";
+            }
             $content_of{$field_id} .= $result;
         }
     }
