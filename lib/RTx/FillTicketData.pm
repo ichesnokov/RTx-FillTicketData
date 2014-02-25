@@ -149,18 +149,13 @@ sub get_data {
         for my $source (@sources) {
 
             # Detect type of source - command or database
-            if ($source->{command}) {
-                if (my $result = _get_command_result($source, %key_field)) {
-                    $content_of{$field_id} .= $result;
-                }
-            } elsif ($source->{database}) {
-                if (my $result = _get_db_result($source, %key_field)) {
-                    $content_of{$field_id} .= $result;
-                }
-            } else {
-                $content_of{$field_id}
-                    = "Wrong source configuration for field $field_id";
-            }
+            my $result =
+                  $source->{command}  ? _get_command_result($source, %key_field)
+                : $source->{database} ? _get_db_result($source, %key_field)
+                : "Wrong source configuration for field $field_id";
+            next if !$result;
+
+            $content_of{$field_id} .= $result;
         }
     }
 
