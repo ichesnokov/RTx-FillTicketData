@@ -64,7 +64,9 @@
         "Body":    [
             { "command": "/bin/cat /home/rt/ACCOUNT_ID" },
             { "command": "/bin/cat /home/rt/ACCOUNT_ID" },
-            { "command": "/bin/cat /home/rt/ACCOUNT_ID" }
+            { "command": "/bin/cat /home/rt/ACCOUNT_ID" },
+            { "Text": "Это просто текст. Акк ИД: ACCOUNT_ID" },
+            { "Text": "Это обычный текст без акк. ид." }
         ],
 
         "_comment": "Тема заявки",
