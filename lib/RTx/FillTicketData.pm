@@ -166,7 +166,7 @@ sub get_data {
                 : $source->{database} ? _get_db_result($source, %key_field)
                 : $source->{Text}     ? _get_text_result($source, %key_field)
                 : "Wrong source configuration for field $field_id";
-            next if !$result;
+            #next if !$result;
 
             # Data from different sources are concatenated using newlines
             if ($content_of{$field_id}) {
