@@ -8,7 +8,7 @@ our $VERSION = '0.01';
 
 use DBI;
 use Digest::MD5 qw(md5_hex);
-use JSON qw(from_json);
+use JSON qw(decode_json);
 
 #use Data::Dumper;
 #local $Data::Dumper::Sortkeys = 1;
@@ -50,7 +50,7 @@ sub read_config {
     $RT::Logger->debug('New plugin configuration detected, re-reading config',
         "old_sum: $old_md5_sum, new sum: $md5_sum");
     $old_md5_sum = $md5_sum;
-    $config = from_json($json_data);
+    $config = decode_json($json_data);
 }
 
 sub read_file {
