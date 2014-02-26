@@ -168,6 +168,8 @@ sub get_data {
                 : "Wrong source configuration for field $field_id";
             #next if !$result;
 
+            $result ||= ''; # avoid warning about uninitialized value
+
             # Data from different sources are concatenated using newlines
             if ($content_of{$field_id}) {
                 $content_of{$field_id} .= "<br/>";
