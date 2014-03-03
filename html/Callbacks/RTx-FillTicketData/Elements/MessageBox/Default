@@ -1,6 +1,0 @@
-<%perl>
-RTx::FillTicketData::set_signature($session{'CurrentUser'}->Id, $$SignatureRef);
-</%perl>
-<%args>
-$SignatureRef => \'';
-</%args>
