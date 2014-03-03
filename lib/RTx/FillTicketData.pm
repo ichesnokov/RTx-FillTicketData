@@ -19,16 +19,20 @@ my $old_md5_sum = ''; # avoid uninitialized warning
 my $config;
 my %dbh_for;
 
-# Current user's signature. It is set before the messagebox is created by
-# appropriate callback.
-my $current_signature;
+# Signature for the appropriate user id
+my %signature_for;
 
-# Accessor for the current signature
-sub current_signature {
-    if (@_) {
-        $current_signature = shift;
-    }
-    return $current_signature;
+sub set_signature {
+    my ($user_id, $signature) = @_;
+
+    $signature_for{$user_id} = $signature;
+    return $signature;
+}
+
+sub get_signature {
+    my $user_id = shift;
+
+    return $signature_for{$user_id};
 }
 
 sub config { return $config; }
@@ -182,8 +186,10 @@ sub get_data {
 
     my %result = map { $html_id_for{$_} => $content_of{$_} } keys %content_of;
 
-    if ($result{Body} && current_signature()) {
-        $result{Body} .= current_signature();
+    my $signature
+        = get_signature($HTML::Mason::Commands::session{'CurrentUser'}->Id);
+    if ($result{Body} && $signature) {
+        $result{Body} .= $signature;
     }
 
     #warn 'result: ' . Dumper(\%result);

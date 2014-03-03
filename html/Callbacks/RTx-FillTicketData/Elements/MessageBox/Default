@@ -1,5 +1,5 @@
 <%perl>
-RTx::FillTicketData::current_signature($$SignatureRef);
+RTx::FillTicketData::set_signature($session{'CurrentUser'}->Id, $$SignatureRef);
 </%perl>
 <%args>
 $SignatureRef => \'';
