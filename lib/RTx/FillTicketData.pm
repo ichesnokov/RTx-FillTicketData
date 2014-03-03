@@ -35,10 +35,14 @@ sub read_config {
         return $config;
     }
 
-    $RT::Logger->debug('New plugin configuration detected, re-reading config',
-        "old_sum: $old_md5_sum, new sum: $md5_sum");
+    $RT::Logger->debug(
+        'New plugin configuration detected, re-initializing',
+        "old md5: $old_md5_sum, new md5: $md5_sum"
+    );
     $old_md5_sum = $md5_sum;
     $config = decode_json($json_data);
+    init_connections();
+    return $config;
 }
 
 sub read_file {

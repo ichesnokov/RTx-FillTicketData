@@ -6,5 +6,4 @@ if (!-f $config_file) {
     return;
 }
 RTx::FillTicketData::read_config($config_file);
-RTx::FillTicketData::init_connections();
 </%init>
