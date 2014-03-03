@@ -19,22 +19,6 @@ my $old_md5_sum = ''; # avoid uninitialized warning
 my $config;
 my %dbh_for;
 
-# Signature for the appropriate user id
-my %signature_for;
-
-sub set_signature {
-    my ($user_id, $signature) = @_;
-
-    $signature_for{$user_id} = $signature;
-    return $signature;
-}
-
-sub get_signature {
-    my $user_id = shift;
-
-    return $signature_for{$user_id};
-}
-
 sub config { return $config; }
 
 sub find_config_file {
@@ -182,14 +166,37 @@ sub get_data {
 
     my %result = map { $html_id_for{$_} => $content_of{$_} } keys %content_of;
 
-    my $signature
-        = get_signature($HTML::Mason::Commands::session{'CurrentUser'}->Id);
+    my $signature = _get_signature();
     if ($result{Body} && $signature) {
         $result{Body} .= $signature;
     }
 
     #warn 'result: ' . Dumper(\%result);
     return \%result;
+}
+
+sub _get_signature {
+
+    my $session_user = $HTML::Mason::Commands::session{'CurrentUser'};
+
+    return if !RT->Config->Get('MessageBoxIncludeSignature', $session_user);
+
+    my $signature = $session_user->UserObj->Signature
+        or return;
+
+    # If we use CKEditor
+    if (RT->Config->Get('MessageBoxRichText', $session_user)) {
+        # FIXME: this is a copy-paste from html/Elements/MessageBox. Factor it
+        # out to e.g. RT::User->HtmlSignature and send a patch for RT sometime.
+        $signature =~ s/&/&amp;/g;
+        $signature =~ s/</&lt;/g;
+        $signature =~ s/>/&gt;/g;
+        $signature =~ s/"/&quot;/g;  # "//;
+        $signature =~ s/'/&#39;/g;   # '//;
+        $signature =~ s{\n}{<br />}g;
+        $signature = "<p>$signature</p>";
+    }
+    return $signature;
 }
 
 sub _get_command_result {
