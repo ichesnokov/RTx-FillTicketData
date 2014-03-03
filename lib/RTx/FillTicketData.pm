@@ -241,7 +241,7 @@ sub _get_db_result {
     $sql =~ s/$readable_id/$quoted_value/g;
 
     my @columns = $dbh->selectrow_array($sql);
-    return join ', ', @columns;
+    return join ', ', map { $_ || '' } @columns;
 }
 
 sub _get_text_result {
