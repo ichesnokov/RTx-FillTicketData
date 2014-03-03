@@ -6,9 +6,6 @@
 </td>
 %}
 
-<%once>
-use RTx::FillTicketData;
-</%once>
 <%ARGS>
 $CustomField => undef
 </%ARGS>

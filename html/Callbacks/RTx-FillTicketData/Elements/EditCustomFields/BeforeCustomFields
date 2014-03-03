@@ -8,6 +8,3 @@ if (!-f $config_file) {
 RTx::FillTicketData::read_config($config_file);
 RTx::FillTicketData::init_connections();
 </%init>
-<%once>
-use RTx::FillTicketData;
-</%once>
