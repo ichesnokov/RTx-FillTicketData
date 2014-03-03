@@ -184,7 +184,9 @@ sub _get_signature {
     my $signature = $session_user->UserObj->Signature
         or return;
 
-    # If we use CKEditor
+    $signature = "-- \n". $signature;
+
+    # If we use CKEditor, replace elements with HTML
     if (RT->Config->Get('MessageBoxRichText', $session_user)) {
         # FIXME: this is a copy-paste from html/Elements/MessageBox. Factor it
         # out to e.g. RT::User->HtmlSignature and send a patch for RT sometime.
