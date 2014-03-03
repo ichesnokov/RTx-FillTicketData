@@ -166,8 +166,7 @@ sub get_data {
 
     my %result = map { $html_id_for{$_} => $content_of{$_} } keys %content_of;
 
-    my $signature = _get_signature();
-    if ($result{Body} && $signature) {
+    if (my $signature = _get_signature()) {
         $result{Body} .= $signature;
     }
 
