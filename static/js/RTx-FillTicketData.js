@@ -14,13 +14,17 @@ jQuery(function($) {
             return;
         }
 
-        // Ticket body is a CKEditor instance
         if (key == 'Body') {
+            // Ticket body is a CKEditor instance
             if (CKEDITOR.instances.Content) {
                 CKEDITOR.instances.Content.setData(val);
-            }
-            if (CKEDITOR.instances.UpdateContent) {
+            } else if (CKEDITOR.instances.UpdateContent) {
                 CKEDITOR.instances.UpdateContent.setData(val);
+            } else if ($("#Content")) {
+                // CKEditor can be switched off, so let's try plain textarea
+                $("#Content").val(val);
+            } else if ($("#UpdateContent")) {
+                $("#UpdateContent").val(val);
             }
 
             return;
