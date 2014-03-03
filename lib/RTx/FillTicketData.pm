@@ -112,13 +112,8 @@ Returns data from configured sources
 sub get_data {
     my $arg = shift;
 
-    #warn 'arg: ' . Dumper($arg);
-
-    # Last try to read a config if we haven't already
-    if (!$config) {
-        read_config();
-        init_connections();
-    }
+    # Re-read config on every request (to avoid restarts)
+    read_config();
 
     # Detect whether we have key fields in the input
     my %field_id_for;
@@ -279,7 +274,6 @@ sub _get_field_id {
     my $html_id = shift;
 
     if ($html_id =~ /CustomField-(\d+)/) {
-        #warn "html_id: $html_id, field_id: $1";
         return $1;
     }
     die "Field html id ($html_id) contains no digits";
