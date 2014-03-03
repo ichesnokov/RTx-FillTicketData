@@ -15,16 +15,20 @@ jQuery(function($) {
         }
 
         if (key == 'Body') {
-            // Ticket body is a CKEditor instance
-            if (CKEDITOR.instances.Content) {
-                CKEDITOR.instances.Content.setData(val);
-            } else if (CKEDITOR.instances.UpdateContent) {
-                CKEDITOR.instances.UpdateContent.setData(val);
-            } else if ($("#Content")) {
+            if (typeof CKEDITOR != 'undefined') {
+                // Ticket body is a CKEditor instance
+                if (CKEDITOR.instances.Content) {
+                    CKEDITOR.instances.Content.setData(val);
+                } else if (CKEDITOR.instances.UpdateContent) {
+                    CKEDITOR.instances.UpdateContent.setData(val);
+                }
+            } else {
                 // CKEditor can be switched off, so let's try plain textarea
-                $("#Content").val(val);
-            } else if ($("#UpdateContent")) {
-                $("#UpdateContent").val(val);
+                if ($("#Content")) {
+                    $("#Content").val(val);
+                } else if ($("#UpdateContent")) {
+                    $("#UpdateContent").val(val);
+                }
             }
 
             return;
