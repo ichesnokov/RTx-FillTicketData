@@ -174,10 +174,6 @@ sub get_data {
 
             $result ||= ''; # avoid warning about uninitialized value
 
-            # Data from different sources are concatenated using newlines
-            if ($content_of{$field_id}) {
-                $content_of{$field_id} .= "<br/>";
-            }
             $content_of{$field_id} .= $result;
         }
     }
