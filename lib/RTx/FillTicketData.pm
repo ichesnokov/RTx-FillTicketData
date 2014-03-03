@@ -154,15 +154,15 @@ sub get_data {
                 : $source->{database} ? _get_db_result($source, %key_field)
                 : $source->{Text}     ? _get_text_result($source, %key_field)
                 : "Wrong source configuration for field $field_id";
-            #next if !$result;
 
             $result ||= ''; # avoid warning about uninitialized value
+
+            # Replace trailing newline with <br /> tag if user needs rich text
+            $result =~ s{\n$}{<br />}xms if rich_text_wanted();
 
             $content_of{$field_id} .= $result;
         }
     }
-
-    #warn 'content_of: ' . Dumper(\%content_of);
 
     my %result = map { $html_id_for{$_} => $content_of{$_} } keys %content_of;
 
@@ -171,23 +171,21 @@ sub get_data {
         $result{Body} .= $signature;
     }
 
-    #warn 'result: ' . Dumper(\%result);
     return \%result;
 }
 
 sub _get_signature {
 
-    my $session_user = $HTML::Mason::Commands::session{'CurrentUser'};
 
-    return if !RT->Config->Get('MessageBoxIncludeSignature', $session_user);
+    return if !RT->Config->Get('MessageBoxIncludeSignature', session_user());
 
-    my $signature = $session_user->UserObj->Signature
+    my $signature = session_user()->UserObj->Signature
         or return;
 
     $signature = "-- \n". $signature;
 
     # If we use CKEditor, replace elements with HTML
-    if (RT->Config->Get('MessageBoxRichText', $session_user)) {
+    if (rich_text_wanted()) {
         # FIXME: this is a copy-paste from html/Elements/MessageBox. Factor it
         # out to e.g. RT::User->HtmlSignature and send a patch for RT sometime.
         $signature =~ s/&/&amp;/g;
@@ -199,6 +197,14 @@ sub _get_signature {
         $signature = "<p>$signature</p>";
     }
     return $signature;
+}
+
+sub session_user {
+    return $HTML::Mason::Commands::session{'CurrentUser'};
+}
+
+sub rich_text_wanted {
+    return RT->Config->Get('MessageBoxRichText', session_user());
 }
 
 sub _get_command_result {
