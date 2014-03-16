@@ -60,7 +60,9 @@ jQuery(function($) {
     $('.autofill_custom_fields').click(function(ev){
         ev.preventDefault();
 
-        var cf_data = {};
+        var queue_id = $("input[name=Queue]").first().val();
+
+        var cf_data = { "queue_id": queue_id };
 
         // Pass custom fields that are currently on page
         $("[class*=CF-]").each(function(){

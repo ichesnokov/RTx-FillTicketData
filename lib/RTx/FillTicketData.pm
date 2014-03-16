@@ -119,6 +119,8 @@ sub get_data {
     my %field_id_for;
     my %key_field;
 
+    my $queue_id = delete $arg->{queue_id};
+
     while (my ($key, $value) = each %$arg) {
         $field_id_for{$key} = _get_field_id($key);
 
@@ -144,7 +146,16 @@ sub get_data {
             && $html_id_for{$_} # Filter out fields not on page
         } keys %{ $config->{field_sources} }
     ) {
-        my @sources = @{ $config->{field_sources}->{$field_id} };
+        # Filter sources where queue_id matches the current one or not specified
+        my @sources = grep {
+            !exists $_->{queue_id}
+            || ref($_->{queue_id}) eq 'ARRAY'
+                && (grep { $_ == $queue_id } @{ $_->{queue_id} })
+            || $_->{queue_id} == $queue_id
+        } @{ $config->{field_sources}->{$field_id} };
+
+
+        # Fill data from sources
         for my $source (@sources) {
 
             # Detect type of source - command or database
