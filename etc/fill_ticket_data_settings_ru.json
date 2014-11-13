@@ -1,14 +1,14 @@
 {
-    "_comment": "Identifiers of key fields",
+    "_comment": "Идентификаторы ключевых полей",
     "key_fields": {
         "1": "ACCOUNT_ID",
         "5": "SWITCH_ID"
     },
 
     "_comment": [
-        "Databases.",
-        "'type' field may contain: mysql, Pg, SQLite (character case is important!).",
-        "For SQLite 'database' field contains an absolute path to the database file"
+        "Базы данных.",
+        "type может содержать: mysql, Pg, SQLite (регистр символов важен!).",
+        "В случае с SQLite поле database содержит полный путь к файлу БД"
     ],
     "databases": {
         "users": {
@@ -27,12 +27,12 @@
         }
     },
 
-    "_comment": "Data sources for Custom Fields",
+    "_comment": "Источники данных для пользовательских полей",
     "field_sources": {
 
         "_comment": [
-            "IP-addresses (CF id == 2)",
-            "To get data from DB you need to specify DB identifier and SQL query."
+            "IP-адреса (CF id == 2)",
+            "Для получения данных из БД нужно указать идентификатор БД и SQL-запрос."
         ],
         "2": [
             {
@@ -42,9 +42,9 @@
         ],
 
         "_comment": [
-            "Phone number (CF id == 3)",
-            "To get data from externdal command you need to specify this command",
-            "(with full path and all the required command line options)."
+            "Телефон (CF id == 3)",
+            "Для получения данных из внешней команды нужно указать эту команду",
+            "(с полным путем и всеми опциями командной строки)."
         ],
         "3": [
             {
@@ -52,7 +52,7 @@
             }
         ],
 
-        "_comment": "Address (CF id == 4)",
+        "_comment": "Адрес (CF id == 4)",
         "4": [
             {
                 "database": "users",
@@ -60,16 +60,16 @@
             }
         ],
 
-        "_comment": "Ticket body",
+        "_comment": "Тело заявки",
         "Body":    [
             { "command": "/bin/cat /home/rt/ACCOUNT_ID" },
             { "command": "/bin/cat /home/rt/ACCOUNT_ID" },
             { "command": "/bin/cat /home/rt/ACCOUNT_ID" },
-            { "Text": "This is a plain text. Acc. ID: ACCOUNT_ID" },
-            { "Text": "This is a plain text without Acc. ID" }
+            { "Text": "Это просто текст. Акк ИД: ACCOUNT_ID" },
+            { "Text": "Это обычный текст без акк. ид." }
         ],
 
-        "_comment": "Subject of the ticket",
+        "_comment": "Тема заявки",
         "Subject": [
             { "command": "/bin/echo 'this is a subject, account: ACCOUNT_ID'" }
         ]
