@@ -8,7 +8,7 @@ our $VERSION = '0.01';
 
 =head1 NAME
 
-RTx::FillTicketData - automatically fill data in RT ticket from preconfigured
+RTx::FillTicketData - Automatically fill data in RT ticket from preconfigured
 sources.
 
 =head1 SYNOPSIS
