@@ -13,6 +13,7 @@ sources.
 
 =head1 SYNOPSIS
 
+    # Lines to add to RT_SiteConfig.pm
     Plugin('RTx::FillTicketData');
 
     # Absolute path to settings file
@@ -21,9 +22,18 @@ sources.
 
 =head1 DESCRIPTION
 
-This extension lets automatically fill ticket data, including body, subject and
-custom fields, from preconfigured data sources - databases or output of external
-commands.
+The purpose of this plugin is to provide a "Fill data" button, which, given an
+unique ID, will send this ID to the server and retrieve data according to the
+configuration provided in JSON config file. Possible external sources are:
+database, shell command output, plain text specified in the configuration. It's
+possible to fill Subject line, Body of the ticket and Custom Fields using this
+plugin.
+
+There may be as many ID fields as needed (the button gets added after every such
+field).
+
+The configuration file gets re-read on every request, and if changed, all
+database connections are reinitialized.
 
 See etc/fill_ticket_data_settings.json (or etc/ticket_data_settings_ru.json) for
 the example of settings file.
