@@ -6,6 +6,30 @@ package RTx::FillTicketData;
 
 our $VERSION = '0.01';
 
+=head1 NAME
+
+RTx::FillTicketData - automatically fill data in RT ticket from preconfigured
+sources.
+
+=head1 SYNOPSIS
+
+    Plugin('RTx::FillTicketData');
+
+    # Absolute path to settings file
+    Set($FillTicketDataSettingsFile =>
+        '/home/rt/rt4/etc/fill_ticket_data_settings.json');
+
+=head1 DESCRIPTION
+
+This extension lets automatically fill ticket data, including body, subject and
+custom fields, from preconfigured data sources - databases or output of external
+commands.
+
+See etc/fill_ticket_data_settings.json (or etc/ticket_data_settings_ru.json) for
+the example of settings file.
+
+=cut
+
 use DBI;
 use Digest::MD5 qw(md5_hex);
 use JSON qw(decode_json);
@@ -289,5 +313,21 @@ sub _get_field_id {
     }
     die "Field html id ($html_id) contains no digits";
 }
+
+=head1 AUTHOR
+
+Ilya Chesnokov E<lt>chesnokov@cpan.orgE<gt>
+
+=head1 ACKNOWLEDGEMENTS
+
+Work on this extension was sponsored by Beirel Telekom LLC
+(L<https://www.beirel.ru>), which also generously allowed to open-source it and
+publish on the Internet.
+
+=head1 LICENSE
+
+Under the same terms as Perl itself.
+
+=cut
 
 1;
