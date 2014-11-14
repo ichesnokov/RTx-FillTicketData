@@ -330,7 +330,7 @@ Ilya Chesnokov E<lt>chesnokov@cpan.orgE<gt>
 
 =head1 ACKNOWLEDGEMENTS
 
-Work on this extension was sponsored by Beirel Telekom LLC
+Work on this extension was sponsored by Beirel Telecom LLC
 (L<https://www.beirel.ru>), which also generously allowed to open-source it and
 publish on the Internet.
 
