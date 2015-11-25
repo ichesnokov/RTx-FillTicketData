@@ -43,7 +43,7 @@
 
         "_comment": [
             "Phone number (CF id == 3)",
-            "To get data from externdal command you need to specify this command",
+            "To get data from external command you need to specify this command",
             "(with full path and all the required command line options)."
         ],
         "3": [
